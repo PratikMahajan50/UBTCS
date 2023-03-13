@@ -17,7 +17,7 @@ clientSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 #Starting the streaming and sending the numberplate number to the server
 
 if True:
-    while(i<=120):
+    while(i<120):
             #ret,frame = cap.read()
 
             fname = "Samples\S (" + str(i)+ ").jpg"
