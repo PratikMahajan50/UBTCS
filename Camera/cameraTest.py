@@ -19,7 +19,7 @@ if True:
     while(i<10):
             #ret,frame = cap.read()
             try:
-                fname = "Samples\S (" + str(i)+ ").jpg"
+                fname = "Samples/S (" + str(i)+ ").jpg"
                 frame = cv2.imread(fname)
                 
                 #Adding the AI logic
