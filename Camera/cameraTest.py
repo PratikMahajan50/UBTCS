@@ -9,10 +9,12 @@ import cv2,pickle, socket, struct,imutils,easyocr
 #cap = cv2.VideoCapture(0)   #considering only 1 camera is connected to the hardware
 i=1
 print("Video Capture Complete")
-
+cname = input("Enter Camera Name: ")
 #Configuring the network
 clientSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-#clientSocket.connect((input("Enter the Server IP: "),8080))
+clientSocket.connect((input("Enter the Server IP: "),8081))
+#clientSocket.send(bytes(cname,'utf-8'))
+clientSocket.send(cname.encode())
 
 #Starting the streaming and sending the numberplate number to the server
 
@@ -54,7 +56,8 @@ if True:
             result = reader.readtext(final)   
             text = result[1][1]
             
-            print(text)       
+            print(text)
+            clientSocket.send(text.encode())
             i+=1  
         
 
