@@ -55,11 +55,14 @@ def client(addr,client_socket):
     #Start Receiving numbers
     while(True):
         number = client_socket.recv(1024).decode()
-        if active.find({"ID":number}):
+        print(number)
+        res = list(active.find({"ID":number}))
+
+        if len(res):
             pass
         else:
             print("Inserting records")
-            active.insert({"ID":number,"src":cname})
+            active.insert_one({"ID":number,"src":cname})
 
 
 i=0
