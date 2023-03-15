@@ -3,6 +3,9 @@ import socket,cv2,pickle,struct,time
 import threading,os
 import numpy as np
 
+#TEMP DATA
+ActiveIds = []
+
 
 def initServer():
     #Accept Nodes
@@ -39,6 +42,7 @@ def initServer():
 
 
 def client(addr,client_socket):
+    global ActiveIds
     #Accept the camera name
     cname = client_socket.recv(1024).decode()
     print("Starting session for Camera: ",cname)
@@ -46,7 +50,10 @@ def client(addr,client_socket):
     #Start Receiving numbers
     while(True):
         number = client_socket.recv(1024).decode()
-        print(number)
+        if ActiveIds.index(number):
+            pass
+        else:
+            ActiveIds.append(number)
 
 
 i=0
