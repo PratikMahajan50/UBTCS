@@ -11,8 +11,8 @@ print("Video Capture Complete")
 
 #Configuring the network
 clientSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-#clientSocket.connect((input("Enter the Server IP: "),8080))
-
+clientSocket.connect((input("Enter the Server IP: "),8081))
+clientSocket.send(input("Enter Camera Name: ").encode())
 #Starting the streaming and sending the numberplate number to the server
 
 if True:
@@ -52,7 +52,8 @@ if True:
                 
                 text = "MH 12 AT "+str(i+1000)
                 time.sleep(3)
-                print(text)       
+                print(text)
+                clientSocket.send(text.encode())    
                 i+=1
             except:
                 i+=1

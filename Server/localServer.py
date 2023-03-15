@@ -58,6 +58,7 @@ def client(addr,client_socket):
         if active.find({"ID":number}):
             pass
         else:
+            print("Inserting records")
             active.insert({"ID":number,"src":cname})
 
 
