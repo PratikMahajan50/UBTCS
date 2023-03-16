@@ -10,29 +10,9 @@ ActiveIds = []
 def initServer():
     #Accept Nodes
     #Accept Paths and associted weights
-    global paths,nodes,server_socket,port,db,active,complete
+    global paths,server_socket,port,db,active,complete
     print("Initializing Server")
     #Demo data, will be updated by database
-    nodes = ["C1","C2","C3","C4"]
-    paths = [
-                [{"src":"C1"},{"des":"C2"},{"w":10}],
-                [{"src":"C2"},{"des":"C1"},{"w":10}],
-                
-                [{"src":"C1"},{"des":"C3"},{"w":20}],
-                [{"src":"C3"},{"des":"C1"},{"w":20}],
-                
-                [{"src":"C1"},{"des":"C4"},{"w":30}],
-                [{"src":"C4"},{"des":"C1"},{"w":30}],
-                
-                [{"src":"C2"},{"des":"C3"},{"w":10}],
-                [{"src":"C3"},{"des":"C2"},{"w":10}],
-                
-                [{"src":"C2"},{"des":"C4"},{"w":20}],
-                [{"src":"C4"},{"des":"C2"},{"w":20}],
-                
-                [{"src":"C3"},{"des":"C4"},{"w":10}],
-                [{"src":"C4"},{"des":"C3"},{"w":10}],
-             ]
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     port = 8081
     socket_address = (input("Enter Server IP: "),port)
@@ -44,7 +24,7 @@ def initServer():
     db = client["ubtcs"]
     active = db["ActiveRecords"]
     complete = db["CompletedRecords"]
-
+    paths = db["Paths"]
 
 def client(addr,client_socket):
     global ActiveIds
@@ -59,7 +39,14 @@ def client(addr,client_socket):
         res = list(active.find({"ID":number}))
 
         if len(res):
-            pass
+            #check if path exists by finding the associated weight of the source and destinaion
+            src="C2"
+            w = paths.find({"src":src,"des":cname})
+            if len(w):
+                print("Error")
+            else:
+                pass #Transaction complete
+            
         else:
             print("Inserting records")
             active.insert_one({"ID":number,"src":cname})
