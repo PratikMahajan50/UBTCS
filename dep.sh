@@ -1,14 +1,23 @@
 #!/bin/sh
-echo "Installing Required Python Dependencies..."
+
+if [[ -n "$(command -v yum)" ]]
+then
+        ins="yum"
+else
+        ins="apt-get"
+fi
+
+
+
 echo "***********************************************************************"
 echo "***********************************************************************"
 echo "Updating System"
-apt-get update
+$ins update
 echo "***********************************************************************"
 echo "***********************************************************************"
-
+echo "Installing Required Python Dependencies..."
 echo "Installing Python3"
-apt-get install python3
+$ins install python3
 echo "***********************************************************************"
 echo "***********************************************************************"
 
