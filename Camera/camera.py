@@ -25,7 +25,7 @@ if clientSocket:
             blur = cv2.GaussianBlur(frame,ksize=(7,7),sigmaX=0)
             edge = cv2.Canny(frame,90,200)
             edge = cv2.dilate(edge,kernel=(3,3),iterations=2)
-            cv2.imwrite("sample.jpg",edge)
+           
             
             
             keypoints = cv2.findContours(edge.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
@@ -39,7 +39,6 @@ if clientSocket:
                 if (len(approx)==4):
                     list = approx
                     break
-            print(list)
             mask = np.zeros_like(frame)
             new_cont = cv2.drawContours(mask,[list],0,255,-1)
             masked = cv2.bitwise_and(frame,frame,mask =mask)
@@ -48,9 +47,10 @@ if clientSocket:
             (x2,y2) = (np.max(x),np.max(y))
             final = masked[x1:x2+1,y1:y2+1]
             final = cv2.cvtColor(final,cv2.COLOR_BGR2RGB)
-            #reader = easyocr.Reader(['en'])
-            #result = reader.readtext(final)   
-            #print(result)         
+            cv2.imwrite("sample.jpg",final)
+            reader = easyocr.Reader(['en'])
+            result = reader.readtext(final)   
+            print(result[0][1])         
         
 
 
