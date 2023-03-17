@@ -10,7 +10,7 @@ print("Video Capture Complete")
 
 #Configuring the network
 clientSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-#clientSocket.connect((input("Enter the Server IP: "),8081))
+clientSocket.connect((input("Enter the Server IP: "),8081))
 
 #Starting the streaming and sending the numberplate number to the server
 
@@ -49,9 +49,9 @@ if clientSocket:
             final = cv2.cvtColor(final,cv2.COLOR_BGR2RGB)
             cv2.imwrite("sample.jpg",final)
             reader = easyocr.Reader(['en'])
-            result = reader.readtext(final)   
-            print(result[0][1])         
-        
+            result = reader.readtext(final)
+            number = result[0][1]
+            clientSocket.send(number.encode())
 
 
 

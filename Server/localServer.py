@@ -21,7 +21,7 @@ def initServer():
     print("Listening at ",socket_address)
     print("Initializing Database")
     client = pymongo.MongoClient("mongodb://localhost:27017")
-    db = client["ubtcs"]
+    db = client["ubtcs"] 
     active = db["ActiveRecords"]
     complete = db["CompletedRecords"]
     paths = db["Paths"]
@@ -40,12 +40,15 @@ def client(addr,client_socket):
 
         if len(res):
             #check if path exists by finding the associated weight of the source and destinaion
-            src="C2"
-            w = paths.find({"src":src,"des":cname})
+            src="C1"
+            des="C2"
+            w = paths.find({"src":src,"des":des})
             if len(w):
                 print("Error")
             else:
-                pass #Transaction complete
+                print("Complete")
+                complete.insert_one({"ID":number,"src":cname,"des":des})
+                #Transaction complete
             
         else:
             print("Inserting records")
