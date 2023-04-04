@@ -2,7 +2,6 @@
 import socket,cv2,pickle,struct,time
 import threading,os
 import numpy as np
-import boto3
 import pymongo
 #TEMP DATA
 ActiveIds = []
@@ -27,12 +26,7 @@ def initServer():
     complete = db["CompletedRecords"]
     paths = db["Paths"]
     #adding communication medium
-    client = boto3.client(
-        "sns",
-        aws_access_key_id="AKIAZ4AWCEGPHBGH3PNK",
-        aws_secret_access_key="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",
-        region_name="ap-southeast-2"
-    )
+    
 
 def client(addr,client_socket):
     global ActiveIds
@@ -55,20 +49,12 @@ def client(addr,client_socket):
             else:
                 print("Complete")
                 complete.insert_one({"ID":number,"src":cname,"des":des})
-                #Transaction complete, store the record to aws  and notify communication server
-                client.publish(
-                    PhoneNumber="+918551053280",
-                    Message="Thank you for travelling with us. You have completed the toll taxed road. We will Deduct Rs. 125 from your account. Thank You!"
-                    )
             
         else:
             #Fetch the details of the vehicles from local repo if not found go to main repository  
             print("Inserting records")
             active.insert_one({"ID":number,"src":cname})
-            client.publish(
-                PhoneNumber="+918551053280",
-                Message="Dear Customer, Welcome! You are travelling through XYZ toll based road. Your toll fare will be collected at the end of the journey. Thanks")
-
+            
 i=0
 initServer()
 while i<nodes.__len__()-3:
