@@ -24,6 +24,7 @@ def initServer():
     active = db["ActiveRecords"]
     complete = db["CompletedRecords"]
     paths = db["Paths"]
+    print("Server Initialization Completed")
     #adding communication medium
     
 
@@ -58,7 +59,7 @@ def client(addr,client_socket):
             
 i=0
 initServer()
-while i<nodes.__len__()-3:
+while i<nodes:
     client_socket,addr = server_socket.accept()
     thread = threading.Thread(target=client, args=(addr,client_socket))
     thread.start()
