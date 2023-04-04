@@ -4,8 +4,7 @@ import threading,os
 import numpy as np
 import pymongo
 #TEMP DATA
-ActiveIds = []
-
+nodes=2
 
 def initServer():
     #Accept Nodes
@@ -37,18 +36,20 @@ def client(addr,client_socket):
     #Start Receiving numbers
     while(True):
         number = client_socket.recv(1024).decode()
+        if not number:
+            break
         print(number)
         res = list(active.find({"ID":number}))
         if len(res):
             #check if path exists by finding the associated weight of the source and destinaion
-            src="C1"
-            des="C2"
-            w = paths.find({"src":src,"des":des})
+            src=res[0].get("src")
+            des=cname
+            w = list(paths.find({"src":src,"des":des}))
             if len(w):
-                print("Error")
-            else:
                 print("Complete")
-                complete.insert_one({"ID":number,"src":cname,"des":des})
+                complete.insert_one({"ID":number,"src":src,"des":des})
+            else:
+                print("Error")
             
         else:
             #Fetch the details of the vehicles from local repo if not found go to main repository  
