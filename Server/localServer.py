@@ -28,17 +28,18 @@ def initServer():
     #Adding remote server mongoDB
     serverIP = input("Enter MongoDBServer IP: ")
     serverClient = pymongo.MongoClient("mongodb://u1:u1@"+serverIP+"/ubtcs")
-    db2 = serverClient["ubtcs"] 
+    db2 = serverClient["ubtcs"]
+    print("Connected to the Main Server") 
     complete = db2["CompletedRecords"]
     vehicle = db2["VehicleDetails"]
 
 #fare per km
 def getFare(classDetail):
     map = {
-        1:0,   2:2, 3:2, 4:3, 5:3,
-        6:3.5, 7:4, 8:5, 9:5, 10:5,
-        11:6, 12:6, 13:6, 14:6, 15:7,
-        16:7, 17:7, 18:7, 19:7, 20:7  
+        "1":0,   "2":2, "3":2, "4":3, "5":3,
+        "6":3.5, "7":4, "8":5, "9":5, "10":5,
+        "11":6, "12":6, "13":6, "14":6, "15":7,
+        "16":7, "17":7, "18":7, "19":7, "20":7  
     }
     return map.get(classDetail)
 
@@ -65,7 +66,7 @@ def client(addr,client_socket):
                 f = f*float(res[0].get("fare"))
                 print("Complete")
                 complete.insert_one({"ID":number,"src":src,"des":des,"fare":f})
-                active.remove({"ID":number})
+                active.delete_one({"ID":number})
             else:
                 print("Error")
             
