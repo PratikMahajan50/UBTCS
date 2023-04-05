@@ -61,8 +61,11 @@ def client(addr,client_socket):
             des=cname
             w = list(paths.find({"src":src,"des":des}))
             if len(w):
+                f = int(w[0].get("w"))
+                f = f*float(res[0].get("fare"))
                 print("Complete")
-                complete.insert_one({"ID":number,"src":src,"des":des})
+                complete.insert_one({"ID":number,"src":src,"des":des,"fare":f})
+                active.remove({"ID":number})
             else:
                 print("Error")
             
@@ -70,11 +73,11 @@ def client(addr,client_socket):
             #Fetch the details of the vehicles from local repo if not found go to main repository
             vd = list(vehicle.find({"ID":number}))
             if(len(vd)):
-                if(vd[0].get("MVC")=="1"):
+                if(vd[0].get("Mapper Vehicle Class")=="1"):
                     print("No Toll")
                 else:
                     print("Inserting records")
-                    f=getFare(vd[0].get("MVC"))
+                    f=getFare(vd[0].get("Mapper Vehicle Class"))
                     active.insert_one({"ID":number,"src":cname,"fare":f})
                 
 i=0
