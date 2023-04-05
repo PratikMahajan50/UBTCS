@@ -6,10 +6,11 @@ import pymongo
 #TEMP DATA
 nodes=2
 
+
 def initServer():
     #Accept Nodes
     #Accept Paths and associted weights
-    global paths,server_socket,port,db,active,complete
+    global paths,server_socket,port,db,active,complete,vehicle
     print("Initializing Server")
     #Demo data, will be updated by database
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -19,14 +20,27 @@ def initServer():
     server_socket.listen()
     print("Listening at ",socket_address)
     print("Initializing Database")
-    client = pymongo.MongoClient("mongodb://localhost:27017")
-    db = client["ubtcs"] 
+    localClient= pymongo.MongoClient("mongodb://localhost:27017")
+    db = localClient["ubtcs"] 
     active = db["ActiveRecords"]
-    complete = db["CompletedRecords"]
     paths = db["Paths"]
     print("Server Initialization Completed")
-    #adding communication medium
-    
+    #Adding remote server mongoDB
+    serverIP = input("Enter MongoDBServer IP: ")
+    serverClient = pymongo.MongoClient("mongodb://u1:u1@"+serverIP+"/ubtcs")
+    db2 = serverClient["ubtcs"] 
+    complete = db2["CompletedRecords"]
+    vehicle = db2["VehicleDetails"]
+
+#fare per km
+def getFare(classDetail):
+    map = {
+        1:0,   2:2, 3:2, 4:3, 5:3,
+        6:3.5, 7:4, 8:5, 9:5, 10:5,
+        11:6, 12:6, 13:6, 14:6, 15:7,
+        16:7, 17:7, 18:7, 19:7, 20:7  
+    }
+    return map.get(classDetail)
 
 def client(addr,client_socket):
     global ActiveIds
@@ -53,10 +67,16 @@ def client(addr,client_socket):
                 print("Error")
             
         else:
-            #Fetch the details of the vehicles from local repo if not found go to main repository  
-            print("Inserting records")
-            active.insert_one({"ID":number,"src":cname})
-            
+            #Fetch the details of the vehicles from local repo if not found go to main repository
+            vd = list(vehicle.find({"ID":number}))
+            if(len(vd)):
+                if(vd[0].get("MVC")=="1"):
+                    print("No Toll")
+                else:
+                    print("Inserting records")
+                    f=getFare(vd[0].get("MVC"))
+                    active.insert_one({"ID":number,"src":cname,"fare":f})
+                
 i=0
 initServer()
 while i<nodes:
@@ -65,4 +85,3 @@ while i<nodes:
     thread.start()
     print("connected Cameras: ",threading.activeCount()-1)
     i+=1
-

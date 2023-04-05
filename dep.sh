@@ -18,9 +18,9 @@ echo "***********************************************************************"
 echo "Installing Required Python Dependencies..."
 echo "Installing Python3"
 $ins install python3
+$ins install python3-pip
 echo "***********************************************************************"
 echo "***********************************************************************"
-
 
 echo "Installing numpy"
 pip3 install numpy
