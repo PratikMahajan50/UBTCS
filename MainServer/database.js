@@ -1,7 +1,7 @@
 var db = connect("127.0.0.1:27017/ubtcs")
 db.createCollection("VehicleDetails")
 db.createCollection("CompleteRecords")
-
+db.createUser({'user':'u1','pwd':'u1','roles':[{role:'readWrite',db:'ubtcs'}]})
 db.VehicleDetails.insert([
         {
                 "ID":"MH 12 AT 1001",
